@@ -570,6 +570,11 @@ public:
                                         fDataSource ? fDataSource->GetColumnNames() : ColumnNames_t{});
 
       auto retTypeName = ROOT::Internal::GetDemangledTypeName(typeid(RetType_t));
+      if (retTypeName.empty()) {
+         // The type is not known to the interpreter.
+         // We must not error out here, but if/when this column is used in jitted code
+         retTypeName = "CLING_UNKNOWN_TYPE_" + retTypeName;
+      }
 
       auto newColumn =
          std::make_shared<RDFDetail::RDefinePerSample<F>>(name, retTypeName, std::move(expression), *fLoopManager);
