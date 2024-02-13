@@ -573,7 +573,8 @@ public:
       if (retTypeName.empty()) {
          // The type is not known to the interpreter.
          // We must not error out here, but if/when this column is used in jitted code
-         retTypeName = "CLING_UNKNOWN_TYPE_" + retTypeName;
+         const auto demangledType = RDFInternal::DemangleTypeIdName(typeid(RetType_t));
+         retTypeName = "CLING_UNKNOWN_TYPE_" + demangledType;
       }
 
       auto newColumn =
