@@ -126,9 +126,8 @@ protected:
    std::string AsString() { return "Numpy data source"; };
 
 public:
-   RNumpyDS(PyObject* pyRVecs,
-                  std::pair<std::string, ROOT::RVec<ColumnTypes>*>... colsNameVals)
-      : fColumns(std::tuple<ROOT::RVec<ColumnTypes>*...>(colsNameVals.second...)),
+   RNumpyDS(PyObject *pyRVecs, std::pair<std::string, ROOT::RVec<ColumnTypes> *>... colsNameVals)
+      : fColumns(std::tuple<ROOT::RVec<ColumnTypes> *...>(colsNameVals.second...)),
         fColNames({colsNameVals.first...}),
         fColTypesMap({{colsNameVals.first, ROOT::Internal::GetDemangledTypeName(typeid(ColumnTypes))}...}),
         fPointerHoldersModels({new ROOT::Internal::TDS::TTypedPointerHolder<ColumnTypes>(new ColumnTypes())...}),
