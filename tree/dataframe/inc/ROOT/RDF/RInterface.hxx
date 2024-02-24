@@ -2953,6 +2953,13 @@ private:
 
       // Declare return type to the interpreter, for future use by jitted actions
       auto retTypeName = ROOT::Internal::GetDemangledTypeName(typeid(RetType));
+      if (retTypeName.empty()) {
+         // The type is not known to the interpreter.s
+         // We must not error out here, but if/when this column is used in jitted code
+         const auto demangledType = RDFInternal::DemangleTypeIdName(typeid(RetType));
+         retTypeName = "CLING_UNKNOWN_TYPE_" + demangledType;
+      }
+
 
       using NewCol_t = RDFDetail::RDefine<F, DefineType>;
       auto newColumn = std::make_shared<NewCol_t>(name, retTypeName, std::forward<F>(expression), validColumnNames,
@@ -3058,6 +3065,12 @@ private:
       CheckAndFillDSColumns(validColumnNames, ColTypes_t{});
 
       auto retTypeName = ROOT::Internal::GetDemangledTypeName(typeid(RetType));
+      if (retTypeName.empty()) {
+         // The type is not known to the interpreter, but we don't want to error out
+         // here, rather if/when this column is used in jitted code, so we inject a broken but telling type name.
+         const auto demangledType = RDFInternal::DemangleTypeIdName(typeid(RetType));
+         retTypeName = "CLING_UNKNOWN_TYPE_" + demangledType;
+      }
 
       auto variation = std::make_shared<RDFInternal::RVariation<F_t, IsSingleColumn>>(
          colNames, variationName, std::forward<F>(expression), variationTags, retTypeName, fColRegister, *fLoopManager,
