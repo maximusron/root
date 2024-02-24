@@ -2954,12 +2954,11 @@ private:
       // Declare return type to the interpreter, for future use by jitted actions
       auto retTypeName = ROOT::Internal::GetDemangledTypeName(typeid(RetType));
       if (retTypeName.empty()) {
-         // The type is not known to the interpreter.s
+         // The type is not known to the interpreter
          // We must not error out here, but if/when this column is used in jitted code
          const auto demangledType = RDFInternal::DemangleTypeIdName(typeid(RetType));
          retTypeName = "CLING_UNKNOWN_TYPE_" + demangledType;
       }
-
 
       using NewCol_t = RDFDetail::RDefine<F, DefineType>;
       auto newColumn = std::make_shared<NewCol_t>(name, retTypeName, std::forward<F>(expression), validColumnNames,
